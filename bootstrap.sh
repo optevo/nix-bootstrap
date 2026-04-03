@@ -66,9 +66,9 @@ echo
 if [ -d "$CONFIG_DIR/.git" ]; then
     echo "Removing old config repo to ensure new token is used..."
     sudo rm -rf "$CONFIG_DIR"
-    # Reset ownership so you can clone as your user
+    # Recreate directory and set ownership to the current user
     sudo mkdir -p "$CONFIG_DIR"
-    sudo chown "$USER":"$USER" "$CONFIG_DIR"
+    sudo chown "$USER" "$CONFIG_DIR"
 fi
 
 echo "Cloning private repo..."
