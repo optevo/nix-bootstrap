@@ -64,11 +64,11 @@ echo
 
 # Ensure config directory is empty and owned by the user
 if [ -d "$CONFIG_DIR" ]; then
-    echo "Removing old config directory (sudo)..."
+    echo "Removing old config directory (requires sudo)..."
     sudo rm -rf "$CONFIG_DIR"
 fi
 mkdir -p "$CONFIG_DIR"
-echo "Changing config directory ownership (sudo)..."
+echo "Changing config directory ownership (requires sudo)..."
 sudo chown -R "$USER:staff" "$CONFIG_DIR"
 
 # Then clone
@@ -76,21 +76,10 @@ echo "Cloning private repo..."
 git clone "https://${GITHUB_PAT}@github.com/optevo/nix-config.git" "$CONFIG_DIR"
 
 # 5. Apply nix-darwin configuration (requires root)
-echo "Step 5: Applying system configuration via nix-darwin (requires sudo)..."
+echo "Step 5: Applying system configuration via nix-darwin."
 cd "$CONFIG_DIR"
 
-# Check if the "default" configuration exists in the flake
-# (Added --color never so your script doesn't trip on invisible terminal codes)
-AVAILABLE=$(nix flake show --color never . | grep darwinConfigurations | sed 's/.*darwinConfigurations.//;s/\.system//')
-
-if ! echo "$AVAILABLE" | grep -q "default"; then
-    echo "Warning: No darwinConfiguration found for 'default'."
-    echo "Available configurations: $AVAILABLE"
-    echo "Please adjust your flake."
-    exit 1
-fi
-
-echo "Note: You will be prompted for your password to apply system-wide changes."
+echo "Nix is applying system-wide changes (requires sudo)..."
 sudo nix run github:LnL7/nix-darwin -- switch --flake .#default
 
 echo "=== Real Nix bootstrap complete ==="
