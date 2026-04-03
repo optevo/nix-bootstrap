@@ -57,13 +57,14 @@ open "https://github.com/settings/personal-access-tokens"
 read -rsp "Enter your PAT (it will be hidden): " GITHUB_PAT
 echo
 
-if [ ! -d "$CONFIG_DIR/.git" ]; then
-    echo "Cloning private repo..."
-    git clone "https://${GITHUB_PAT}@github.com/optevo/nix-config.git" "$CONFIG_DIR"
-else
-    echo "Updating existing config..."
-    git -C "$CONFIG_DIR" pull --ff-only
+# If repo exists, remove it so we use the new token cleanly
+if [ -d "$CONFIG_DIR/.git" ]; then
+    echo "Removing old config repo to ensure new token is used..."
+    rm -rf "$CONFIG_DIR"
 fi
+
+echo "Cloning private repo..."
+git clone "https://${GITHUB_PAT}@github.com/optevo/nix-config.git" "$CONFIG_DIR"
 
 # 5. Apply nix-darwin configuration (requires root)
 echo "Step 5: Applying system configuration via nix-darwin (requires sudo)..."
