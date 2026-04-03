@@ -49,15 +49,16 @@ CONFIG_DIR="$HOME/.config/nix"
 PRIVATE_REPO="https://github.com/optevo/nix-config.git"
 
 echo "You need a GitHub Personal Access Token (PAT) to access the private repo."
-echo "If you haven't generated one, your browser will open GitHub's token page."
-read -p "Press Enter to open GitHub token settings page in your browser..."
+echo "The token must have **read/write Contents permission on the repository."
+echo "If you can't see the token you previously generated, you may need to regenerate it."
+echo "If you haven't generated one yet, your browser will open GitHub's token page."
 
 open "https://github.com/settings/personal-access-tokens"
 
 read -rsp "Enter your PAT (it will be hidden): " GITHUB_PAT
 echo
 
-# If repo exists, remove it so we use the new token cleanly
+# Remove any existing clone to avoid credential issues
 if [ -d "$CONFIG_DIR/.git" ]; then
     echo "Removing old config repo to ensure new token is used..."
     rm -rf "$CONFIG_DIR"
