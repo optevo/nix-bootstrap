@@ -49,13 +49,19 @@ CONFIG_DIR="$HOME/.config/nix"
 PRIVATE_REPO="https://github.com/optevo/nix-config.git"
 
 echo "You need a GitHub Personal Access Token (PAT) to access the private repo."
-echo "The token must have **read/write Contents permission on the repository."
+echo "The token must have read/write Contents permission on the repository."
 echo "If you can't see the token you previously generated, you may need to regenerate it."
 echo "If you haven't generated one yet, your browser will open GitHub's token page."
+
 read -p "Press Enter to open GitHub token settings page in your browser..."
 
+# Open GitHub token page
 open "https://github.com/settings/personal-access-tokens"
 
+# Pause so user has time to copy/generate the token
+read -p "After generating or copying your token, press Enter to continue..."
+
+# Prompt for the token
 read -rsp "Enter your PAT (it will be hidden): " GITHUB_PAT
 echo
 
