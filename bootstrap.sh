@@ -79,7 +79,7 @@ git clone "https://${GITHUB_PAT}@github.com/optevo/nix-config.git" "$CONFIG_DIR"
 echo "Step 5: Applying system configuration via nix-darwin."
 cd "$CONFIG_DIR"
 
-echo "Nix is applying system-wide changes (requires sudo)..."
-sudo nix run github:LnL7/nix-darwin -- switch --flake .#default
+echo "Nix is applying system-wide changes (may require sudo)..."
+nix run github:LnL7/nix-darwin -- switch --flake .#default
 
 echo "=== Real Nix bootstrap complete ==="
