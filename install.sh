@@ -77,16 +77,26 @@ if [ -d "$CONFIG_DIR/.git" ]; then
     echo "Repository exists. Updating..."
     cd "$CONFIG_DIR"
 
-# Check for local changes
-if ! git diff --quiet || ! git diff --cached --quiet; then
-    echo "Warning: local changes detected in $CONFIG_DIR!"
-    git status
-    read -p "Do you want to discard these changes and reset to origin/main? [y/N]: " yn
-    case "$yn" in
-        [Yy]* ) git reset --hard origin/main ;;
-        * ) echo "Aborting bootstrap."; exit 1 ;;
-    esac
+    if ! git diff --quiet || ! git diff --cached --quiet; then
+        echo "Warning: local changes detected in $CONFIG_DIR!"
+        git status
+
+        read -p "Do you want to discard these changes and reset to the latest origin/main? [y/N]: " yn
+        case "$yn" in
+            [Yy]* )
+                echo "Fetching latest from origin..."
+                git fetch origin
+                echo "Resetting local changes..."
+                git reset --hard origin/main
+                ;;
+            * )
+                echo "Aborting bootstrap."
+                exit 1
+                ;;
+        esac
     else
+        echo "No local changes. Fetching latest from origin and resetting..."
+        git fetch origin
         git reset --hard origin/main
     fi
 else
@@ -104,18 +114,19 @@ else
 
     # Only back up if the config dir exists
     if [ -d "$CONFIG_DIR" ]; then
-        # Clean up old backup(s) before creating a new one
-        for old in "${CONFIG_DIR}.backup."*; do
-            [ -e "$old" ] && rm -rf "$old"
+        # Remove any existing backups matching the pattern
+        shopt -s nullglob  # allows the glob to expand to nothing if no matches
+        for old_backup in "${CONFIG_DIR}.backup."*; do
+            rm -rf "$old_backup"
         done
+        shopt -u nullglob
 
-        # Move current config to a timestamped backup
-        mv "$CONFIG_DIR" "${CONFIG_DIR}.backup.$(date +%s)"
+        # Move current config to a new timestamped backup
+        timestamp=$(date +%s)
+        mv "$CONFIG_DIR" "${CONFIG_DIR}.backup.$timestamp"
     fi
 
     echo "Starting clone... Please look for the 'Username' and 'Password' prompts below."
-    
-    # Git will now prompt you natively and save the result to your Keychain
     git clone "$REPO_URL" "$CONFIG_DIR"
 fi
 
