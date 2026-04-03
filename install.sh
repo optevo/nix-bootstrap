@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 # Bootstrap for Nix + nix-darwin
 
+# Fail if run as root
 if [ "$(id -u)" -eq 0 ]; then
     echo "This script should NOT be run with sudo. Please run as your normal user."
     exit 1
 fi
 
+# Fail if no TTY (interactive only)
+if [ ! -t 0 ]; then
+    echo "No TTY detected. This bootstrap requires interactive input."
+    exit 1
+fi
 set -euo pipefail
 
 # Force the script to start in the user's home directory
