@@ -54,7 +54,6 @@ fi
 # Sync private configuration repository
 echo "Syncing private configuration repository..."
 
-CONFIG_DIR="$HOME/.config/nix"
 REPO_URL="https://github.com/optevo/nix-config.git"
 
 # Tell Git to use the macOS Keychain (saves the token for future runs)
