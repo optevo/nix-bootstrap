@@ -74,7 +74,21 @@ git clone "https://${GITHUB_PAT}@github.com/optevo/nix-config.git" "$CONFIG_DIR"
 # 5. Apply nix-darwin configuration (requires root)
 echo "Step 5: Applying system configuration via nix-darwin (requires sudo)..."
 cd "$CONFIG_DIR"
+
+# Get current hostname
+HOSTNAME="$(hostname)"
+
+# Check which darwinConfigurations exist in the flake
+AVAILABLE=$(nix flake show . | grep darwinConfigurations | sed 's/.*darwinConfigurations.//;s/\.system//')
+
+if ! echo "$AVAILABLE" | grep -q "^$HOSTNAME$"; then
+    echo "Warning: No darwinConfiguration found for hostname '$HOSTNAME'."
+    echo "Available configurations: $AVAILABLE"
+    echo "Please adjust your flake or use one of the available keys."
+    exit 1
+fi
+
 echo "Note: You will be prompted for your password to apply system-wide changes."
-sudo nix run github:LnL7/nix-darwin -- switch --flake .
+sudo nix run github:LnL7/nix-darwin -- switch --flake .#$HOSTNAME
 
 echo "=== Real Nix bootstrap complete ==="
