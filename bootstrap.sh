@@ -52,7 +52,7 @@ echo "You need a GitHub Personal Access Token (PAT) to access the private repo."
 echo "If you haven't generated one, your browser will open GitHub's token page."
 read -p "Press Enter to open GitHub token settings page in your browser..."
 
-open "https://github.com/settings/tokens"
+open "https://github.com/settings/personal-access-tokens"
 
 read -rsp "Enter your PAT (it will be hidden): " GITHUB_PAT
 echo
