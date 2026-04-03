@@ -79,6 +79,11 @@ git clone -c credential.helper= "https://oauth2:${GITHUB_PAT}@github.com/optevo/
 echo "Step 5: Applying system configuration via nix-darwin."
 cd "$CONFIG_DIR"
 
+# Move existing shell profiles so nix-darwin can take over
+echo "Preparing /etc/bashrc and /etc/zshrc (requires sudo)..."
+sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin 2>/dev/null || true
+sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin 2>/dev/null || true
+
 echo "Nix is applying system-wide changes (requires sudo)..."
 sudo nix run github:LnL7/nix-darwin -- switch --flake .#default
 
