@@ -80,10 +80,13 @@ echo "Step 5: Applying system configuration via nix-darwin."
 cd "$CONFIG_DIR"
 
 # Move existing shell profiles so nix-darwin can take over
-echo "Preparing /etc/bashrc and /etc/zshrc (requires sudo)..."
-sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin 2>/dev/null || true
-sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin 2>/dev/null || true
-
+for file in /etc/bashrc /etc/zshrc; do
+    # ONLY move if it's a real file (-f) AND NOT a symbolic link (! -L)
+    if [ -f "$file" ] && [ ! -L "$file" ]; then
+        echo "Backing up native $file (requires sudo)..."
+        sudo mv "$file" "$file.before-nix-darwin"
+    fi
+done
 
 echo "Nix is applying system-wide changes (requires sudo)..."
 sudo nix run github:LnL7/nix-darwin -- switch --flake .#default
