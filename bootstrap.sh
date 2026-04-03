@@ -65,9 +65,10 @@ else
     git -C "$CONFIG_DIR" pull --ff-only
 fi
 
-# 5. Apply nix-darwin configuration
-echo "Step 5: Applying system configuration via nix-darwin..."
+# 5. Apply nix-darwin configuration (requires root)
+echo "Step 5: Applying system configuration via nix-darwin (requires sudo)..."
 cd "$CONFIG_DIR"
-nix run github:LnL7/nix-darwin -- switch --flake .
+echo "Note: You will be prompted for your password to apply system-wide changes."
+sudo nix run github:LnL7/nix-darwin -- switch --flake .
 
 echo "=== Real Nix bootstrap complete ==="
