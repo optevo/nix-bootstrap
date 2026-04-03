@@ -62,15 +62,12 @@ open "https://github.com/settings/personal-access-tokens"
 read -rsp "After generating or copying your token, enter your PAT (it will be hidden): " GITHUB_PAT
 echo
 
-# Always remove existing config dir to avoid permission issues
-if [ -d "$CONFIG_DIR" ]; then
-    echo "Removing old config repo to ensure new token is used..."
-    sudo rm -rf "$CONFIG_DIR"
-fi
+# Ensure config directory exists and is writable
+sudo mkdir -p "$CONFIG_DIR"
+sudo chown -R "$USER:staff" "$CONFIG_DIR"
 
-# Recreate directory and set ownership to the current user
-mkdir -p "$CONFIG_DIR"
-sudo chown -R "$USER" "$CONFIG_DIR"
+# Remove old git repo if it exists
+rm -rf "$CONFIG_DIR/.git"
 
 echo "Cloning private repo..."
 git clone "https://${GITHUB_PAT}@github.com/optevo/nix-config.git" "$CONFIG_DIR"
