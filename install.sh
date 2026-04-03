@@ -63,9 +63,19 @@ git config --global credential.helper osxkeychain
 if [ -d "$CONFIG_DIR/.git" ]; then
     echo "Repository exists. Updating..."
     cd "$CONFIG_DIR"
-    chown -R "$USER:staff" "."
-    git fetch origin
-    git reset --hard origin/main
+
+# Check for local changes
+if ! git diff --quiet || ! git diff --cached --quiet; then
+    echo "Warning: local changes detected in $CONFIG_DIR!"
+    git status
+    read -p "Do you want to discard these changes and reset to origin/main? [y/N]: " yn
+    case "$yn" in
+        [Yy]* ) git reset --hard origin/main ;;
+        * ) echo "Aborting bootstrap."; exit 1 ;;
+    esac
+    else
+        git reset --hard origin/main
+    fi
 else
     echo "First-time setup detected."
     echo "-----------------------------------------------------------"
@@ -88,7 +98,6 @@ else
     
     # Git will now prompt you natively and save the result to your Keychain
     git clone "$REPO_URL" "$CONFIG_DIR"
-    chown -R "$USER:staff" "$CONFIG_DIR"
 fi
 
 # Apply nix-darwin configuration (requires root)
