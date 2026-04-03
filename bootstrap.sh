@@ -58,11 +58,8 @@ read -p "Press Enter to open GitHub token settings page in your browser..."
 # Open GitHub token page
 open "https://github.com/settings/personal-access-tokens"
 
-# Pause so user has time to copy/generate the token
-read -p "After generating or copying your token, press Enter to continue..."
-
 # Prompt for the token
-read -rsp "Enter your PAT (it will be hidden): " GITHUB_PAT
+read -rsp "After generating or copying your token, enter your PAT (it will be hidden): " GITHUB_PAT
 echo
 
 # Remove any existing clone to avoid credential issues
