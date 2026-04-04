@@ -50,13 +50,14 @@ NIX_DAEMON_SCRIPT="/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
 # Install if missing
 if ! command -v nix >/dev/null 2>&1; then
     echo "Nix not found — installing..."
-    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+    sh <(curl -L https://nixos.org/nix/install) --daemon
 fi
 
-# Always try to load environment (idempotent)
-if [ -r "$NIX_DAEMON_SCRIPT" ]; then
+# Load vanilla Nix environment (multi-user install)
+NIX_PROFILE="$HOME/.nix-profile/etc/profile.d/nix.sh"
+if [ -r "$NIX_PROFILE" ]; then
     echo "Loading Nix environment..."
-    . "$NIX_DAEMON_SCRIPT"
+    . "$NIX_PROFILE"
 fi
 
 # Final sanity check
