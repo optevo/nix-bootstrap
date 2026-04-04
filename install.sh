@@ -25,8 +25,9 @@ set -euo pipefail
 # Force the script to start in the user's home directory
 cd "$HOME"
 
-PRIVATE_REPO="github:optevo/nix-config"      # Private repo
-CONFIG_DIR="${HOME}/.config/nix"             # Local Nix configuration
+PRIVATE_REPO="github:optevo/nix"      # Private repo
+CONFIG_DIR="${HOME}/nix"             # Local Nix configuration
+REPO_URL="https://github.com/optevo/nix.git"
 
 echo "=== Starting real Nix bootstrap ==="
 echo "Config directory: $CONFIG_DIR"
@@ -67,8 +68,6 @@ fi
 
 # Sync private configuration repository
 echo "Syncing private configuration repository..."
-
-REPO_URL="https://github.com/optevo/nix-config.git"
 
 # Tell Git to use the macOS Keychain (saves the token for future runs)
 git config --global credential.helper osxkeychain
