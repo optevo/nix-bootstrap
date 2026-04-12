@@ -7,7 +7,7 @@ It is intended to get a Mac into a state where it can pull a **private Nix confi
 ## Overview
 
 1. Installs Apple Developer Tools if needed.
-2. Installs Nix via the Determinate Systems installer.
+2. Installs Nix via the upstream nixos.org installer (pure, flake-driven setup).
 3. Loads Nix into the current shell.
 4. Authenticates with GitHub CLI or Keychain.
 5. Clones the private Nix configuration repo into `~/.config/nix`.
